@@ -4,20 +4,42 @@ const API = require('./lib/core/api')
 const CorpAPI = require('./lib/core/corp-api')
 const SuiteAPI = require('./lib/core/suite-api')
 
+/**
+ * 用于支持对象合并。将对象合并到API.prototype上，使得能够支持扩展
+ * Examples:
+ * ```
+ * // 媒体管理（上传、下载）
+ * API.mixin(require('./lib/api_media'));
+ * ```
+ * @param {Object} obj 要合并的对象
+ */
+function mixin (API, obj) {
+  for (let key in obj) {
+    if (API.prototype.hasOwnProperty(key)) {
+      throw new Error('Don\'t allow override existed prototype method. method: ' + key)
+    }
+    API.prototype[key] = obj[key]
+  }
+}
+
+// crypto
+mixin(API, require('./lib/api_crypto'))
+
 /*  微信企业应用 */
 // 授权
-CorpAPI.mixin(require('./lib/corp_oauth'))
+mixin(CorpAPI, require('./lib/corp_oauth'))
 // js API
-CorpAPI.mixin(require('./lib/corp_js'))
+mixin(CorpAPI, require('./lib/corp_js'))
 
 /* 微信企业服务商 */
-// 第三方
-SuiteAPI.mixin(require('./lib/suite_3rd'))
+// 第三方商户
+mixin(SuiteAPI, require('./lib/suite_3rd'))
 
 module.exports = {
   Ticket,
   AccessToken,
   API,
   CorpAPI,
-  SuiteAPI
+  SuiteAPI,
+  mixin
 }
