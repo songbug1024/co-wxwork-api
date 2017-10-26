@@ -3,6 +3,7 @@ const AccessToken = require('./lib/core/access-token')
 const API = require('./lib/core/api')
 const CorpAPI = require('./lib/core/corp-api')
 const SuiteAPI = require('./lib/core/suite-api')
+const SuiteCorpAPI = require('./lib/core/suite-corp-api')
 
 /**
  * 用于支持对象合并。将对象合并到API.prototype上，使得能够支持扩展
@@ -41,5 +42,6 @@ module.exports = {
   API,
   CorpAPI,
   SuiteAPI,
+  SuiteCorpAPI,
   mixin
 }
